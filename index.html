@@ -4,148 +4,178 @@
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
 
+<style>
+  .wrapper {
+    display: flex;
+  }
+  .graphic {
+    position: relative;
+    width: 400px;
+    height: 400px;
+}
+
+  svg {
+    position: absolute;
+  }
+</style>
+
 <!-- Create a div where the graph will take place -->
-<graphic id="mygraphic_1"></graphic>
-
-<graphic id="mygraphic_2"></graphic>
-
-<graphic id="mygraphic_3"></graphic>
-
-
-
+<div class="wrapper">
+  <div class="graphic">
+    <graphic id="mygraphic_1"></graphic>
+  </div>
+  <div class="graphic">
+    <graphic id="mygraphic_2"></graphic>
+  </div>
+  <div class="graphic">
+    <graphic id="mygraphic_3"></graphic>
+  </div>
+</div>
 
 
 <script>
 
-draw("#mygraphic_1", "data1");
-draw("#mygraphic_2", "data2");
-draw("#mygraphic_3", "data3");
+  draw("#mygraphic_1", "data1");
+  draw("#mygraphic_2", "data2");
+  draw("#mygraphic_3", "data3");
 
-function draw(selector, url){
+  function draw(selector, url) {
 
 
-
-  d3.json(url + ".json", function(err,data){
-  if(err) console.log("error fetching data");
+    d3.json(url + ".json", function (err, data) {
+      if (err) console.log("error fetching data");
 
 // set the dimensions and margins of the graph
-var width = 450
-    height = 450
-    margin = 40
+      var width = 450
+      height = 450
+      margin = 40
 
-var width2 = 150
-    height2 = 150
-    margin2 = 20
+      var width2 = 50
+      height2 = 50
+      margin2 = 0
 
 // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
-var radius = Math.min(width, height) / 2 - margin
-var radius2 = Math.min(width2, height2) / 2 - margin2
+      var radius = Math.min(width, height) / 2 - margin
+
+// set the dimensions and margins of the graph
+
+      var svg2 = d3.select(selector)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+      ;
+
+
+      var svg = d3.select(selector)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+// append the svg object to the body of the page
+
 
 // append the svg object to the div called 'mygraphic'
-var svg = d3.select(selector)
-  .append("svg")
-    .attr("width", width)
-    .attr("height", height)
-  .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-svg .append("text")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("text-anchor", "middle")
-    .style("font-size", "16px")
-    .style("text-decoration", "underline")
-    .text(data[0].title + " : " + data[0].info.desktop);
+      svg.append("text")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("text-decoration", "underline")
+        .text(data[0].title + " : " + data[0].info.desktop);
 
- svg .append("text")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("text-anchor", "middle")
-    .style("font-size", "16px")
-    .style("text-decoration", "underline")
-    .text("test");
+      svg.append("text")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("text-decoration", "underline")
+        .attr("y", 25)
+        .text("test");
 
 
 // set the color scale
-var color = d3.scaleOrdinal()
-  .domain(data[0])
-  .range(["#98abc5", "#000000", "#7b6888", "#6b486b", "#a05d56"])
+      var color = d3.scaleOrdinal()
+        .domain(data[0])
+        .range(["#98abc5", "#000000", "#7b6888", "#6b486b", "#a05d56"])
 
 // Compute the position of each group on the pie:
-var pie = d3.pie()
-  .value(function(d) {return d.value; })
-var data_ready = pie(d3.entries(data[0].info))
+      var pie = d3.pie()
+        .value(function (d) {
+          return d.value;
+        })
+      var data_ready = pie(d3.entries(data[0].info))
 
 // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-svg
-  .selectAll('whatever')
-  .data(data_ready)
-  .enter()
-  .append('path')
-  .attr('d', d3.arc()
-    .innerRadius(150)         // This is the size of the donut hole
-    .outerRadius(radius)
-  )
-  .attr('fill', function(d){ return(color(d.data.key)) })
-  .attr("stroke", "black")
-  .style("stroke-width", "2px")
-  .style("opacity", 0.7)
-
-
-
-// set the dimensions and margins of the graph
-var margin2 = {top: 10, right: 30, bottom: 30, left: 50},
-    width2 =260 - margin2.left - margin2.right,
-    height2 = 200 - margin2.top - margin2.bottom;
-
-// append the svg object to the body of the page
-var svg2 = d3.select(selector)
-  .append("svg")
-    .attr("width", width2 + margin2.left + margin2.right)
-    .attr("height", height2 + margin2.top + margin2.bottom)
-    .append("g")
-    .attr("transform",
-          "translate(" + margin2.left + "," + margin2.top + ")");
-
-  d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv",
-
-  // When reading the csv, I must format variables:
-  function(d){
-    return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
-  },
-
-  // Now I can use this dataset:
-  function(data) {
-
-    // Add X axis --> it is a date format
-    var x = d3.scaleTime()
-      .domain(d3.extent(data, function(d) { return d.date; }))
-      .range([ 0, width2 ]);
-
-
-    // Add Y axis
-    var y = d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) { return +d.value; })])
-      .range([ height2, 0 ]);
-
-
-    // Add the area
-    svg2.append("path")
-      .datum(data)
-      .attr("fill", "#cce5df")
-      .attr("stroke", "#69b3a2")
-      .attr("stroke-width", 1.5)
-      .attr("d", d3.area()
-        .x(function(d) { return x(d.date) })
-        .y0(y(0))
-        .y1(function(d) { return y(d.value) })
+      svg
+        .selectAll('whatever')
+        .data(data_ready)
+        .enter()
+        .append('path')
+        .attr('d', d3.arc()
+          .innerRadius(150)         // This is the size of the donut hole
+          .outerRadius(radius)
         )
+        .attr('fill', function (d) {
+          return (color(d.data.key))
+        })
+        .attr("stroke", "black")
+        .style("stroke-width", "2px")
+        .style("opacity", 0.7)
 
-})
+
+      d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv",
+
+        // When reading the csv, I must format variables:
+        function (d) {
+          return {date: d3.timeParse("%Y-%m-%d")(d.date), value: d.value}
+        },
+
+        // Now I can use this dataset:
+        function (data) {
+
+          // Add X axis --> it is a date format
+          var x = d3.scaleTime()
+            .domain(d3.extent(data, function (d) {
+              return d.date;
+            }))
+            .range([0, width2]);
 
 
-});
-};
+          // Add Y axis
+          var y = d3.scaleLinear()
+            .domain([0, d3.max(data, function (d) {
+              return +d.value;
+            })])
+            .range([height2, 0]);
+
+
+          // Add the area
+          svg2.append("path")
+            .datum(data)
+            .attr("fill", "#cce5df")
+            .attr("stroke", "#69b3a2")
+            .attr("stroke-width", 1.5)
+            .attr("d", d3.area()
+              .x(function (d) {
+                return x(d.date)
+              })
+              .y0(y(0))
+              .y1(function (d) {
+                return y(d.value)
+              })
+            )
+
+        })
+
+
+    });
+  };
 
 </script>
 
