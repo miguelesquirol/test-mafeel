@@ -5,6 +5,7 @@
       "desktop": 29,
       "phone": 20
     },
+    "colors" : ["#98abc5", "red"],
     "yearly": [
       {
         "receive_date": "2013-11-04",

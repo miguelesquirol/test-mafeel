@@ -3,5 +3,6 @@
     "info" : { 
         "desktop": 29, 
         "phone": 20 
-        }
+        },
+        "colors" : ["#98abc5", "green"]
 }]
