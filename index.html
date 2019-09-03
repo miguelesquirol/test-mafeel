@@ -38,19 +38,28 @@ var radius = Math.min(width, height) / 2 - margin
 
 // append the svg object to the div called 'mygraphic'
 var svg = d3.select(selector)
-  .append("text")
-    .attr("x", (width / 2))             
-    .attr("y", (height / 2))
-    .attr("text-anchor", "middle")  
-    .style("font-size", "16px") 
-    .style("text-decoration", "underline")  
-    .text(data[0].title)
   .append("svg")
     .attr("width", width)
     .attr("height", height)
   .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
+svg .append("text")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("text-anchor", "middle")  
+    .style("font-size", "16px") 
+    .style("text-decoration", "underline")  
+    .text(data[0].title + " : " + data[0].info.desktop);
+    
+ svg .append("text")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("text-anchor", "middle")  
+    .style("font-size", "16px") 
+    .style("text-decoration", "underline")  
+    .text("test");
+    
 
 // set the color scale
 var color = d3.scaleOrdinal()
@@ -69,7 +78,7 @@ svg
   .enter()
   .append('path')
   .attr('d', d3.arc()
-    .innerRadius(100)         // This is the size of the donut hole
+    .innerRadius(150)         // This is the size of the donut hole
     .outerRadius(radius)
   )
   .attr('fill', function(d){ return(color(d.data.key)) })
