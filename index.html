@@ -107,26 +107,27 @@ var svg2 = d3.select(selector)
     .attr("transform",
           "translate(" + margin2.left + "," + margin2.top + ")");
 
+  d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv",
 
-
-    return { date : data[0].yearly.receive_date.timeParse("%Y-%m-%d")(ata[0].yearly.value), value : d.value }
+  // When reading the csv, I must format variables:
+  function(d){
+    return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+  },
 
   // Now I can use this dataset:
+  function(data) {
 
     // Add X axis --> it is a date format
     var x = d3.scaleTime()
       .domain(d3.extent(data, function(d) { return d.date; }))
       .range([ 0, width2 ]);
-    svg2.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+
 
     // Add Y axis
     var y = d3.scaleLinear()
       .domain([0, d3.max(data, function(d) { return +d.value; })])
       .range([ height2, 0 ]);
-    svg2.append("g")
-      .call(d3.axisLeft(y));
+
 
     // Add the area
     svg2.append("path")
@@ -140,11 +141,7 @@ var svg2 = d3.select(selector)
         .y1(function(d) { return y(d.value) })
         )
 
-
-
-
-
-
+})
 
 
 });
