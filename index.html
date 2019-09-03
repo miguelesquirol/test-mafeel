@@ -24,14 +24,10 @@ draw("#mygraphic_3", "data3");
 function draw(selector, url){
 
 
-  var data;
-d3.json("data1.json", function(err,datajson){
-  if(err) console.log("error fetching data");
-  console.log(datajson);
-  data = datajson
-  }); 
-  
 
+  d3.json(url + ".json", function(err,data){
+  if(err) console.log("error fetching data");
+  
 // set the dimensions and margins of the graph
 var width = 450
     height = 450
@@ -39,12 +35,6 @@ var width = 450
 
 // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
 var radius = Math.min(width, height) / 2 - margin
-
-
-    
-
-
-console.log(data);
 
 // append the svg object to the div called 'mygraphic'
 var svg = d3.select(selector)
@@ -54,7 +44,7 @@ var svg = d3.select(selector)
     .attr("text-anchor", "middle")  
     .style("font-size", "16px") 
     .style("text-decoration", "underline")  
-    .text(data.title)
+    .text(data[0].title)
   .append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -64,13 +54,13 @@ var svg = d3.select(selector)
 
 // set the color scale
 var color = d3.scaleOrdinal()
-  .domain(data)
+  .domain(data[0])
   .range(["#98abc5", "#000000", "#7b6888", "#6b486b", "#a05d56"])
 
 // Compute the position of each group on the pie:
 var pie = d3.pie()
   .value(function(d) {return d.value; })
-var data_ready = pie(d3.entries(data.info))
+var data_ready = pie(d3.entries(data[0].info))
 
 // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
 svg
@@ -86,7 +76,7 @@ svg
   .attr("stroke", "black")
   .style("stroke-width", "2px")
   .style("opacity", 0.7)
-
+});
 };
 
 </script>
