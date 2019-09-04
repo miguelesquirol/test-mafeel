@@ -2,6 +2,8 @@
 <meta charset="utf-8">
 
 <!-- Load d3.js -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+
 <script src="https://d3js.org/d3.v4.js"></script>
 
 <style>
@@ -12,6 +14,7 @@
     position: relative;
     width: 400px;
     height: 400px;
+    margin:40px;
 }
 
   svg {
@@ -50,12 +53,19 @@
       height = 450
       margin = 40
 
-      var width2 = 50
-      height2 = 50
+      var width2 = 80
+      height2 = 80
       margin2 = 0
 
 // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
       var radius = Math.min(width, height) / 2 - margin
+
+      var valuesAdded = data[0].info.desktop + data[0].info.phone
+
+      var percentageDesktop = data[0].info.desktop * 100 / valuesAdded
+
+      var precentagePhone = data[0].info.phone * 100 / valuesAdded
+
 
 // set the dimensions and margins of the graph
 
@@ -84,20 +94,61 @@
       svg.append("text")
         .attr("width", width)
         .attr("height", height)
+        .style("font-weight", "600")
+        .style('fill', "#cfbda5")
         .attr("text-anchor", "middle")
-        .style("font-size", "16px")
-        .style("text-decoration", "underline")
-        .text(data[0].title + " : " + data[0].info.desktop);
+        .style("font-size", "26px")
+        .style("text-transform", "uppercase")
+        .attr("font-family", "Roboto")
+        .text(data[0].title);
 
       svg.append("text")
         .attr("width", width)
         .attr("height", height)
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
-        .style("text-decoration", "underline")
+        .attr("font-family", "Roboto")
         .attr("y", 25)
-        .text("test");
+        .text(valuesAdded);
 
+        svg.append("text")
+        .style("font-size", "18px")
+        .style("font-weight", "600")
+        .style('fill', data[0].colors[0])
+        .attr("y", 180)
+        .attr("x", - 200)
+        .attr("font-family", "Roboto")
+        .text("desktop");
+
+        svg.append("text")
+        .style("font-size", "16px")
+        .attr("y", 200)
+        .attr("x", - 200)
+        .attr("font-family", "Roboto")
+        .text(Math.round(percentageDesktop) + "%");
+
+
+        svg.append("text")
+        .style("font-size", "18px")
+        .style('fill', data[0].colors[1])
+        .style("font-weight", "600")
+        .style("text-align", "right")
+        .attr("y", 180)
+        .attr("x", 180)
+        .attr("font-family", "Roboto")
+        .attr("text-anchor", "end")
+        .text("phone");
+
+        svg.append("text")
+        .style("font-size", "16px")
+        
+        .attr("y", 200)
+        .attr("x", 180)
+        .attr("text-anchor", "end")
+        .attr("font-family", "Roboto")
+        .text(Math.round(precentagePhone) + "%");
+
+        
 
 // set the color scale
       var color = d3.scaleOrdinal()
@@ -118,8 +169,8 @@
         .enter()
         .append('path')
         .attr('d', d3.arc()
-          .innerRadius(150)         // This is the size of the donut hole
-          .outerRadius(radius)
+        .innerRadius(170)         // This is the size of the donut hole
+        .outerRadius(radius)
         )
         .attr('fill', function (d) {
           return (color(d.data.key))
